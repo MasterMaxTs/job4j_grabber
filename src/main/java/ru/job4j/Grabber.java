@@ -3,11 +3,6 @@ package ru.job4j;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
