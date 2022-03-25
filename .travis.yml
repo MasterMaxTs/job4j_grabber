@@ -1,0 +1,30 @@
+language: java
+
+jdk:
+  - openjdk15
+
+sudo: false
+
+env:
+  global:
+    - CODECOV_TOKEN="3b8bc408-e3f1-4796-abae-46fa50d5f133"
+
+# после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
+# Здесь используется сторонний сервис https://codecov.io/
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email:
+    recipients:
+      max86ts@gmail.com
+    on_success: never # default: change
+    on_failure: always # default: always
+
+# Start PostgreSQL
+services:
+  - postgresql
+
+# Create a database
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
