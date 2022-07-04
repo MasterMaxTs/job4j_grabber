@@ -1,7 +1,7 @@
 
 Проект. Агрегатор Java вакансий        
-[![Build Status](https://app.travis-ci.com/MasterMaxTs/job4j_grabber.svg?branch=master)](https://app.travis-ci.com/MasterMaxTs/job4j_grabber)
-[![codecov](https://codecov.io/gh/MasterMaxTs/job4j_grabber/branch/master/graph/badge.svg?token=P6BBJSCD5K)](https://codecov.io/gh/MasterMaxTs/job4j_grabber)
+[![Build Status](https://app.travis-ci.com/MasterMaxTs/project_grabber.svg?branch=master)](https://app.travis-ci.com/MasterMaxTs/project_grabber)
+[![codecov](https://codecov.io/gh/MasterMaxTs/project_grabber/branch/master/graph/badge.svg?token=P6BBJSCD5K)](https://codecov.io/gh/MasterMaxTs/project_grabber)
 
 Программа считывает с сайта sql.ru раздела job все вакансии, относящиеся к Java, и записывает их в базу данных.
 Программа использует планировщик для запуска по расписанию. Период запуска указывается в настройках app.properties.
