@@ -2,8 +2,13 @@ package ru.job4j;
 
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import ru.job4j.html.SqlRuParse;
-import ru.job4j.utils.SqlRuDateTimeParser;
+import ru.job4j.grabber.Grabber;
+import ru.job4j.model.Post;
+import ru.job4j.parser.Parse;
+import ru.job4j.parser.html.SqlRuDateTimeParser;
+import ru.job4j.parser.html.SqlRuParse;
+import ru.job4j.store.PsqlStore;
+import ru.job4j.store.Store;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,9 +27,9 @@ public class Starter {
             throws IOException, SQLException, SchedulerException, ClassNotFoundException {
         Properties cfg = load();
         Grabber grab = new Grabber(cfg);
-        Scheduler scheduler = grab.scheduler();
         Parse parse = new SqlRuParse(new SqlRuDateTimeParser());
-        Store store = grab.store();
+        Store store = new PsqlStore(cfg);
+        Scheduler scheduler = grab.scheduler();
         grab.init(parse, store, scheduler);
         web(store);
     }

@@ -1,9 +1,11 @@
-package ru.job4j;
+package ru.job4j.grabber;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import ru.job4j.model.Post;
+import ru.job4j.parser.Parse;
+import ru.job4j.store.Store;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,10 +25,6 @@ public class Grabber implements Grab {
 
     public static void showResult(Store store) {
         store.getAll().forEach(System.out::println);
-    }
-
-    public Store store() throws SQLException, ClassNotFoundException {
-        return new PsqlStore(cfg);
     }
 
     public Scheduler scheduler() {

@@ -1,12 +1,12 @@
-package ru.job4j.html;
+package ru.job4j.parser.html;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.job4j.Parse;
-import ru.job4j.Post;
-import ru.job4j.utils.DateTimeParser;
+import ru.job4j.model.Post;
+import ru.job4j.parser.DateTimeParser;
+import ru.job4j.parser.Parse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

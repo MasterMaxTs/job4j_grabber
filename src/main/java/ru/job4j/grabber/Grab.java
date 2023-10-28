@@ -1,7 +1,9 @@
-package ru.job4j;
+package ru.job4j.grabber;
 
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import ru.job4j.parser.Parse;
+import ru.job4j.store.Store;
 
 public interface Grab {
 
