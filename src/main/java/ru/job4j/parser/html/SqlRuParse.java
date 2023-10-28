@@ -15,12 +15,30 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Реализация парсинга сайта: sql.ru
+ */
 public class SqlRuParse implements Parse {
 
-    private final DateTimeParser dateTimeParser;
+    /**
+     * Количество первых страниц сайта для парсинга
+     */
     private static final int COUNT_OF_PAGES = 5;
+
+    /**
+     * Критерий поиска вакансии
+     */
     private static final String SEARCH = "java";
 
+    /**
+     * Зависимость от парсинга даты
+     */
+    private final DateTimeParser dateTimeParser;
+
+    /**
+     * Конструктор
+     * @param dateTimeParser реализация парсинга даты на сайте
+     */
     public SqlRuParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
     }
@@ -70,6 +88,11 @@ public class SqlRuParse implements Parse {
         return post;
     }
 
+    /**
+     * Проверяет, содержит ли ссылка на пост искомый критерий поиска вакансии
+     * @param link ссылка на ресурс сайта с постом на входе
+     * @return результат проверки в виде boolean
+     */
     private boolean match(String link) {
         Pattern pattern = Pattern.compile(
                                          String.format(".*\\b%s\\b.*", SEARCH));

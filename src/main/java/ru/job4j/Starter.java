@@ -19,10 +19,20 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Главный класс приложения
+ */
 public class Starter {
 
+    /**
+     * Значение ключа для файла app.properties
+     */
     private static final String SERVER_PORT = "server.port";
 
+    /**
+     * Главный исполняемый метод приложения
+     * @param args массив из аргументов командной строки
+     */
     public static void main(String[] args)
             throws IOException, SQLException, SchedulerException, ClassNotFoundException {
         Properties cfg = load();
@@ -34,6 +44,10 @@ public class Starter {
         web(store);
     }
 
+    /**
+     * Загружает данные из файла app.properties в объект Properties
+     * @return проинициализированный объект с настройками приложения
+     */
     private static Properties load() throws IOException {
         Properties cfg = new Properties();
         try (InputStream in =
@@ -43,6 +57,10 @@ public class Starter {
         return cfg;
     }
 
+    /**
+     * Отображает найденные посты пользователю через веб-интерфейс
+     * @param store хранилище постов на входе
+     */
     private static void web(Store store) {
         new Thread(() -> {
             try (ServerSocket server = new ServerSocket(

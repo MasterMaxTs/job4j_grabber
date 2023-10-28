@@ -7,10 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Реализация хранилища постов, размещённых в БД
+ */
 public class PsqlStore implements Store, AutoCloseable {
 
+    /**
+     * Зависимость от объекта Connection
+     */
     private final Connection cnn;
 
+    /**
+     * Конструктор
+     * @param cfg объект настроек приложения в виде Properties
+     */
     public PsqlStore(Properties cfg)
                                 throws ClassNotFoundException, SQLException {
         Class.forName(cfg.getProperty("jdbc.driver"));
@@ -21,6 +31,11 @@ public class PsqlStore implements Store, AutoCloseable {
         );
     }
 
+    /**
+     * Возвращает пост из БД
+     * @param rs объект ResultSet на входе
+     * @return пост
+     */
     private Post getPostFromDb(ResultSet rs) {
         Post post = new Post();
         try {
@@ -74,23 +89,6 @@ public class PsqlStore implements Store, AutoCloseable {
             se.printStackTrace();
         }
         return posts;
-    }
-
-    @Override
-    public Post findById(int id) {
-        try (PreparedStatement ps = cnn.prepareStatement(
-                "SELECT * FROM post WHERE id = ?"
-        )) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return getPostFromDb(rs);
-                }
-            }
-        } catch (SQLException se) {
-            se.printStackTrace();
-        }
-        return null;
     }
 
     @Override

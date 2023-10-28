@@ -3,12 +3,34 @@ package ru.job4j.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Модель данных Пост
+ */
 public class Post {
 
+    /**
+     * Идентификатор вакансии
+     */
     private int id;
+
+    /**
+     * Название вакансии
+     */
     private String title;
+
+    /**
+     * Ссылка на описание вакансии
+     */
     private String link;
+
+    /**
+     * Описание вакансии
+     */
     private String description;
+
+    /**
+     * Дата создания вакансии
+     */
     private LocalDateTime created;
 
     public void setId(int id) {

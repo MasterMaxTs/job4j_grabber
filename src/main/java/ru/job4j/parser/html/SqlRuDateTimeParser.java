@@ -7,15 +7,46 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
+/**
+ * Реализация парсинга даты на сайте: sql.ru
+ */
 public class SqlRuDateTimeParser implements DateTimeParser {
 
+    /**
+     * Значение текущей даты
+     */
+    private static final LocalDate CURRENT_DATE = LocalDate.now();
+
+    /**
+     * Обозначение сегодняшней даты
+     */
+    private static final String TODAY = "сегодня";
+
+    /**
+     * Обозначение вчерашней даты
+     */
+    private static final String YESTERDAY = "вчера";
+
+    /**
+     * Значение префикса для отображения года в дате
+     */
+    private static final String PREFIX = "20";
+
+    /**
+     * Значение индекса массива
+     */
+    private static final int POS = 0;
+
+    /**
+     * Карта соответствия названия даты и порядкового номера месяца
+     */
     private static final Map<String, String> MONTHS =
             Map.ofEntries(
-                    Map.entry("сегодня",
-                            String.valueOf(LocalDate.now().getMonth().getValue())
+                    Map.entry(TODAY,
+                            String.valueOf(CURRENT_DATE.getMonth().getValue())
                     ),
-                    Map.entry("вчера",
-                            String.valueOf(LocalDate.now().minusDays(1).getMonth().getValue())
+                    Map.entry(YESTERDAY,
+                            String.valueOf(CURRENT_DATE.minusDays(1).getMonth().getValue())
                     ),
                     Map.entry("янв", "01"),
                     Map.entry("фев", "02"),
@@ -30,9 +61,6 @@ public class SqlRuDateTimeParser implements DateTimeParser {
                     Map.entry("ноя", "11"),
                     Map.entry("дек", "12")
             );
-    private static final int POS = 0;
-    private static final String YESTERDAY = "вчера";
-    private static final String PREFIX = "20";
 
     @Override
     public LocalDateTime parse(String parse) {
@@ -43,19 +71,19 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         LocalTime time =
                 LocalTime.parse(elements[POS + 1].replaceAll("[\\[\\]|\\s]",
                         ""));
-        String[] dateChars = elements[POS].split("\\s");
-        if (dateChars.length == 1) {
-            year = LocalDate.now().getYear();
-            month = Integer.parseInt(MONTHS.get(dateChars[POS]));
+        String[] dateComponents = elements[POS].split("\\s");
+        if (dateComponents.length == 1) {
+            year = CURRENT_DATE.getYear();
+            month = Integer.parseInt(MONTHS.get(dateComponents[POS]));
             dayOfMonth =
-                    dateChars[POS].equals(YESTERDAY)
-                            ? LocalDate.now().minusDays(1).getDayOfMonth()
-                            : LocalDate.now().getDayOfMonth();
+                    dateComponents[POS].equals(YESTERDAY)
+                            ? CURRENT_DATE.minusDays(1).getDayOfMonth()
+                            : CURRENT_DATE.getDayOfMonth();
 
         } else {
-            year = Integer.parseInt(PREFIX.concat(dateChars[POS + 2]));
-            month = Integer.parseInt(MONTHS.get(dateChars[POS + 1]));
-            dayOfMonth = Integer.parseInt(dateChars[POS]);
+            year = Integer.parseInt(PREFIX.concat(dateComponents[POS + 2]));
+            month = Integer.parseInt(MONTHS.get(dateComponents[POS + 1]));
+            dayOfMonth = Integer.parseInt(dateComponents[POS]);
         }
         return LocalDateTime.of(
                 LocalDate.of(year, month, dayOfMonth),
