@@ -23,11 +23,11 @@ public class PsqlStore implements Store, AutoCloseable {
      */
     public PsqlStore(Properties cfg)
                                 throws ClassNotFoundException, SQLException {
-        Class.forName(cfg.getProperty("jdbc.driver"));
+        Class.forName(cfg.getProperty("driver-class-name"));
         cnn = DriverManager.getConnection(
-                        cfg.getProperty("jdbc.url"),
-                        cfg.getProperty("jdbc.username"),
-                        cfg.getProperty("jdbc.password")
+                        cfg.getProperty("url"),
+                        cfg.getProperty("username"),
+                        cfg.getProperty("password")
         );
     }
 
@@ -54,9 +54,10 @@ public class PsqlStore implements Store, AutoCloseable {
     public void save(Post post) {
         try (PreparedStatement ps = cnn.prepareStatement(
                 "INSERT INTO post (name, text, link, created) "
-                + "VALUES (?, ?, ?, ?)"
-                        + "ON CONFLICT (link)"
-                        + "DO NOTHING",
+                + "VALUES (?, ?, ?, ?) "
+                        + "ON CONFLICT (link) "
+                        + "DO UPDATE SET name = EXCLUDED.name, text = "
+                        + "EXCLUDED.text, created = EXCLUDED.created",
                 Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, post.getTitle());
