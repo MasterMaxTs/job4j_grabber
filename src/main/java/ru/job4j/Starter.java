@@ -1,12 +1,11 @@
 package ru.job4j;
 
-import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import ru.job4j.grabber.Grabber;
 import ru.job4j.model.Post;
 import ru.job4j.parser.Parse;
-import ru.job4j.parser.html.SqlRuDateTimeParser;
-import ru.job4j.parser.html.SqlRuParse;
+import ru.job4j.parser.html.CareerHabrComDateTimeParser;
+import ru.job4j.parser.html.CareerHabrComParse;
 import ru.job4j.store.PsqlStore;
 import ru.job4j.store.Store;
 
@@ -25,7 +24,7 @@ import java.util.Properties;
 public class Starter {
 
     /**
-     * Значение ключа для файла app.properties
+     * Инициализация значения ключа для файла classpath:app.properties
      */
     private static final String SERVER_PORT = "server.port";
 
@@ -36,11 +35,11 @@ public class Starter {
     public static void main(String[] args)
             throws IOException, SQLException, SchedulerException, ClassNotFoundException {
         Properties cfg = load();
-        Grabber grab = new Grabber(cfg);
-        Parse parse = new SqlRuParse(new SqlRuDateTimeParser());
+        String time = cfg.getProperty("time");
+        Parse parser = new CareerHabrComParse(new CareerHabrComDateTimeParser());
         Store store = new PsqlStore(cfg);
-        Scheduler scheduler = grab.scheduler();
-        grab.init(parse, store, scheduler);
+        Grabber grab = new Grabber(parser, store, time);
+        grab.init();
         web(store);
     }
 

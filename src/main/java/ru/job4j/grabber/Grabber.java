@@ -7,7 +7,6 @@ import ru.job4j.parser.Parse;
 import ru.job4j.store.Store;
 
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Реализация загрузки распарсенных постов в хранилище по расписанию
@@ -25,32 +24,36 @@ public class Grabber implements Grab {
     private static final String STORE_KEY_DATA_MAP = "store";
 
     /**
+     * Зависимость от парсера сайта
+     */
+    private final Parse parser;
+
+    /**
+     * Зависимость от хранилища постов
+     */
+    private final Store store;
+
+    /**
+     * Объект планировщик
+     */
+    private final Scheduler scheduler;
+
+    /**
      * Значение интервала в часах между запусками выполнения задания
      */
-    private static final String INTERVAL_IN_HOURS = "time";
-
-    /**
-     * Значение ключа для объекта Properties
-     */
-    private static final String PARSING_SITE_URL = "site.url";
-
-    /**
-     * Значение ссылки url
-     */
-    private static String url = "";
-
-    /**
-     * Зависимость от объекта свойства приложения
-     */
-    private final Properties cfg;
+    private final String time;
 
     /**
      * Конструктор
-     * @param cfg объект свойства приложения
+     * @param parser парсер сайта
+     * @param store хранилище постов
+     * @param time часовой интервал между запусками
      */
-    public Grabber(Properties cfg) {
-        this.cfg = cfg;
-        url = cfg.getProperty(PARSING_SITE_URL);
+    public Grabber(Parse parser, Store store, String time) {
+        this.parser = parser;
+        this.store = store;
+        this.time = time;
+        scheduler = initScheduler();
     }
 
     /**
@@ -62,10 +65,10 @@ public class Grabber implements Grab {
     }
 
     /**
-     * Создаёт и запускает планировщик
+     * Инициализация и запуск планировщика
      * @return объект планировщик
      */
-    public Scheduler scheduler() {
+    private Scheduler initScheduler() {
         Scheduler scheduler = null;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -78,22 +81,18 @@ public class Grabber implements Grab {
 
     /**
      * Инициализирует загрузку распарсенных постов в хранинилище по расписанию
-     * @param parse объект парсинг сайта
-     * @param store объект хранилище постов
-     * @param scheduler объект планировщик
      */
     @Override
-    public void init(Parse parse, Store store, Scheduler scheduler)
-                                                    throws SchedulerException {
+    public void init() throws SchedulerException {
         JobDataMap data = new JobDataMap();
-        data.put(PARSE_KEY_DATA_MAP, parse);
+        data.put(PARSE_KEY_DATA_MAP, parser);
         data.put(STORE_KEY_DATA_MAP, store);
         JobDetail job = JobBuilder
                                  .newJob(GrabJob.class)
                                  .usingJobData(data)
                                  .build();
         SimpleScheduleBuilder times = SimpleScheduleBuilder.repeatHourlyForever(
-                Integer.parseInt(cfg.getProperty(INTERVAL_IN_HOURS))
+                Integer.parseInt(time)
         );
         Trigger trigger = TriggerBuilder
                                         .newTrigger()
@@ -113,7 +112,7 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Parse parse = (Parse) map.get(PARSE_KEY_DATA_MAP);
             Store store = (Store) map.get(STORE_KEY_DATA_MAP);
-            List<Post> posts = parse.list(url);
+            List<Post> posts = parse.list();
             posts.forEach(store::save);
             showResult(store);
         }

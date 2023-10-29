@@ -21,30 +21,36 @@ import java.util.regex.Pattern;
 public class SqlRuParse implements Parse {
 
     /**
-     * Количество первых страниц сайта для парсинга
+     * Инициализация количества первых страниц сайта для парсинга
      */
-    private static final int COUNT_OF_PAGES = 5;
+    private static final int COUNT_OF_PAGES = 6;
 
     /**
-     * Критерий поиска вакансии
+     * Инициализация критерия поиска вакансии
      */
     private static final String SEARCH = "java";
 
     /**
-     * Зависимость от парсинга даты
+     * Зависимость от парсера даты
      */
     private final DateTimeParser dateTimeParser;
 
     /**
+     * Строковое значение URL-адреса страницы сайта
+     */
+    private final String url;
+
+    /**
      * Конструктор
-     * @param dateTimeParser реализация парсинга даты на сайте
+     * @param dateTimeParser парсер даты
      */
     public SqlRuParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
+        url = "https://www.sql.ru/forum/job-offers/";
     }
 
     @Override
-    public List<Post> list(String url) {
+    public List<Post> list() {
         List<Post> vacancies = new ArrayList<>();
         for (int i = 1; i <= COUNT_OF_PAGES; i++) {
             try {

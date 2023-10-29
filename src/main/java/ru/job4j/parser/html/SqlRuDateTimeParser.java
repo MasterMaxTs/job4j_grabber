@@ -8,37 +8,38 @@ import java.time.LocalTime;
 import java.util.Map;
 
 /**
- * Реализация парсинга даты на сайте: sql.ru
+ * Реализация парсера даты на сайте: sql.ru
  */
 public class SqlRuDateTimeParser implements DateTimeParser {
 
     /**
-     * Значение текущей даты
+     * Инициализация текущей даты
      */
     private static final LocalDate CURRENT_DATE = LocalDate.now();
 
     /**
-     * Обозначение сегодняшней даты
+     * Инициализация строкового представления сегодняшней даты
      */
     private static final String TODAY = "сегодня";
 
     /**
-     * Обозначение вчерашней даты
+     * Инициализация строкового представления вчерашней даты
      */
     private static final String YESTERDAY = "вчера";
 
     /**
-     * Значение префикса для отображения года в дате
+     *  Инцициализация префикса для отображения года в дате
      */
     private static final String PREFIX = "20";
 
     /**
-     * Значение индекса массива
+     * Инициализация значения текущей позиции индекса массива
      */
     private static final int POS = 0;
 
     /**
-     * Карта соответствия названия даты и порядкового номера месяца
+     * Инициализация карты соответствия названия даты
+     * и порядкового номера месяца
      */
     private static final Map<String, String> MONTHS =
             Map.ofEntries(
